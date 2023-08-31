@@ -1,0 +1,36 @@
+import jaydebeapi
+
+# Define the connection parameters
+jdbc_url = "jdbc:custom_driver_url"
+username = "your_username"
+password = "your_password"
+jdbc_driver_path = "/path/to/custom_driver.jar"
+cacerts_path = "/path/to/cacerts"  # Path to the cacerts file
+truststore_password = "your_truststore_password"  # Truststore password
+
+# Specify the driver class for your specific driver
+driver_class = "com.example.DriverClassName"
+
+# Additional connection properties
+additional_props = {
+    "sslTrustStore": cacerts_path,
+    "sslTrustStorePassword": truststore_password
+}
+
+# Establish the JDBC connection with the specified driver class and additional properties
+conn = jaydebeapi.connect(driver_class, [jdbc_url, username, password], jdbc_driver_path, additional_props)
+
+# Create a cursor object
+cursor = conn.cursor()
+
+# Execute a SQL query
+query = "SELECT * FROM your_table"
+cursor.execute(query)
+
+# Fetch and print the results
+for row in cursor.fetchall():
+    print(row)
+
+# Close the cursor and connection
+cursor.close()
+conn.close()
