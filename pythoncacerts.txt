@@ -1,0 +1,42 @@
+import jaydebeapi
+
+def connect_to_jdbc_datasource(driver_class, url, user, password):
+  """Connects to a JDBC datasource using a custom driver and when the source verifies characters.
+
+  Args:
+    driver_class: The fully qualified class name of the JDBC driver.
+    url: The JDBC URL of the database.
+    user: The username for the database.
+    password: The password for the database.
+
+  Returns:
+    A connection object to the database.
+  """
+
+  java_options = ["-Djavax.net.ssl.trustStore=JAVA_HOME/lib/security/cacerts -Djavax.net.ssl.trustStorePassword=my_password"]
+  connection = jaydebeapi.connect(driver_class, url, [user, password], java_options)
+
+  return connection
+
+def main():
+  """Connects to a JDBC datasource and verifies that the source can handle special characters.
+
+  This example uses the Oracle JDBC driver, but any JDBC driver can be used.
+  """
+
+  driver_class = "oracle.jdbc.driver.OracleDriver"
+  url = "jdbc:oracle:thin:@localhost:1521:xe"
+  user = "scott"
+  password = "tiger"
+
+  connection = connect_to_jdbc_datasource(driver_class, url, user, password)
+
+  # Verify that the source can handle special characters.
+  statement = connection.createStatement()
+  result_set = statement.executeQuery("SELECT 'This is a string with special characters: !@#$%^&*()'")
+
+  if result_set.next():
+    print(result_set.getString(1))
+
+if __name__ == "__main__":
+  main()
