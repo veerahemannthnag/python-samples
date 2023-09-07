@@ -1,0 +1,31 @@
+import pyhive
+
+# Get the Hive JDBC jar file path
+hive_jdbc_jar_path = os.path.join(os.path.dirname(__file__), "hive-jdbc-3.1.2.jar")
+
+# Create a connection object
+conn = pyhive.connect(
+    host="localhost",
+    port=10000,
+    database="default",
+    user="hive",
+    password="password",
+    auth="none",
+    jar_path=hive_jdbc_jar_path,
+    truststore_path="path/to/truststore.jks",
+    truststore_password="password",
+)
+
+# Execute a query
+cursor = conn.cursor()
+cursor.execute("SELECT * FROM table")
+
+# Fetch the results
+rows = cursor.fetchall()
+
+# Print the results
+for row in rows:
+    print(row)
+
+# Close the connection
+conn.close()
