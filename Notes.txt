@@ -1,0 +1,1 @@
+gcloud compute images describe-from-family IMAGE_FAMILY --project=PROJECT_ID --format="get(name)" --filter="status=READY" | grep -o 'projects/[^ ]*/global/images/[^ ]*' | awk -F '/' '{print $NF}'
