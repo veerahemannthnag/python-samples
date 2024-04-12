@@ -7,16 +7,15 @@ function check_job_status() {
 
   if [[ -z "$job_status" ]]; then
     echo "Job '$job_name' is still running..."
-    return 2  # Indicate job still running (different from error)
-  fi
-
-  if [[ "$job_status" == "true" ]]; then
-    echo "Job '$job_name' completed successfully!"
-    return 0  # Indicate successful completion
   else
-    echo "Job '$job_name' failed!"
-    kubectl describe job "$job_name"
-    return 1  # Indicate failure
+    if [[ "$job_status" == "true" ]]; then
+      echo "Job '$job_name' completed successfully!"
+      return 0  # Indicate successful completion
+    else
+      echo "Job '$job_name' failed!"
+      kubectl describe job "$job_name"
+      return 1  # Indicate failure
+    fi
   fi
 }
 
@@ -30,17 +29,18 @@ fi
 
 # Keep checking job status until it finishes
 while true; do
-  # Check job status and handle return code
-  local status_code=$(check_job_status "$job_name")
-  if [[ $status_code -eq 0 ]]; then
+  # Check job status and handle output
+  local status_message=$(check_job_status "$job_name")
+  if [[ "$status_message" == "Job '$job_name' completed successfully!" ]]; then
     # Job succeeded, exit loop with success (0)
     exit 0
-  elif [[ $status_code -eq 1 ]]; then
+  elif [[ "$status_message" == "Job '$job_name' failed!" ]]; then
     # Job failed, exit loop with error (1)
     echo "Error: Job failed. Exiting..."
     exit 1
   else
-    # Job still running, sleep and continue checking
+    # Job still running, print message and continue checking
+    echo "$status_message"
     sleep 10  # Adjust sleep time as needed
   fi
 done
