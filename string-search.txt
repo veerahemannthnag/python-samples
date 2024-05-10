@@ -31,7 +31,7 @@ if __name__ == "__main__":
 import sys
 
 def find_errors_with_command(filename):
-    errors_with_command = []
+    errors_with_command = set()  # Use a set to store unique values
     with open(filename, 'r') as file:
         lines = file.readlines()
         for i in range(len(lines)):
@@ -41,13 +41,13 @@ def find_errors_with_command(filename):
                         if "WRAPPER JDBC" in lines[j]:
                             wrapper_index = lines[j].find("WRAPPER JDBC")
                             wrapper_value = lines[j][wrapper_index:].split()[2]
-                            errors_with_command.append(f"WRAPPER JDBC: {wrapper_value}")
+                            errors_with_command.add(f"WRAPPER JDBC: {wrapper_value}")
                         if "TABLE" in lines[j]:
                             table_index = lines[j].find("TABLE")
                             table_value = lines[j][table_index:].split()[1]
-                            errors_with_command.append(f"TABLE: {table_value}")
+                            errors_with_command.add(f"TABLE: {table_value}")
                         break
-                errors_with_command.append(lines[i])
+                errors_with_command.add(lines[i].strip())
     return errors_with_command
 
 def main():
