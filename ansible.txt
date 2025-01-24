@@ -1,0 +1,16 @@
+- name: Wait for the startup script to complete
+  hosts: localhost
+  tasks:
+    - name: Poll GCP instance metadata for startup script status
+      command: >
+        gcloud compute instances describe <INSTANCE_NAME>
+        --zone=<ZONE>
+        --format="get(metadata.startup-script-status)"
+      register: startup_status
+      until: startup_status.stdout == "done"
+      retries: 30  # Adjust as per expected script completion time
+      delay: 10
+
+    - name: Proceed with next tasks once the startup script is complete
+      debug:
+        msg: "Startup script completed. Proceeding with next tasks."
