@@ -1,1 +1,6 @@
 gcloud compute images describe-from-family IMAGE_FAMILY --project=PROJECT_ID --format="get(name)" --filter="status=READY" | grep -o 'projects/[^ ]*/global/images/[^ ]*' | awk -F '/' '{print $NF}'
+
+gcloud secrets create "my-secret" \
+    --replication-policy="user-managed" \ # user-managed requires locations
+    --kms-key="projects/my-project/locations/us-central1/keyRings/my-keyring/cryptoKeys/my-key" \
+    --project="my-project"
