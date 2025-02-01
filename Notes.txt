@@ -10,3 +10,18 @@ curl -k -s -H "Authorization: Bearer <YOUR_TOKEN>" \
      -H "Content-Type: application/json" \
      -X PATCH "https://<ANSIBLE_CONTROLLER>/api/v2/credentials/<CREDENTIAL_ID>/" \
      -d "{\"inputs\": {\"service_account_json\": $SA_JSON}}"
+
+
+curl -k -X PATCH https://<TOWER_HOST>/api/v2/credentials/<CREDENTIAL_ID>/ \
+    -H "Authorization: Bearer <TOKEN>" \
+    -H "Content-Type: application/json" \
+    -d '{
+          "name": "Updated GCE Credential",
+          "description": "Updated Google Compute Engine Credential",
+          "inputs": {
+              "username": "new-gce-user",
+              "project": "your-gcp-project-id",
+              "ssh_key_data": "your-ssh-private-key",
+              "service_account_json": "your-updated-service-account-json"
+          }
+        }'
