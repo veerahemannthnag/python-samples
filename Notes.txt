@@ -25,3 +25,21 @@ curl -k -X PATCH https://<TOWER_HOST>/api/v2/credentials/<CREDENTIAL_ID>/ \
               "service_account_json": "your-updated-service-account-json"
           }
         }'
+
+curl -X PATCH \
+     -H "Authorization: Bearer <your_token>" \
+     -H "Content-Type: application/json" \
+     -d '{
+           "name": "<credential_name>",
+           "description": "<credential_description>",
+           "credential_type": {
+             "name": "Google Compute Engine"
+           },
+           "inputs": {
+             "service_account_email": "<updated_email>",
+             "project": "<updated_project_id>",
+             "service_account_json_file": "<updated_json_file>",
+             "rsa_private_key": "<updated_private_key>"
+           }
+         }' \
+     "<api_url>/credentials/<credential_id>/"
